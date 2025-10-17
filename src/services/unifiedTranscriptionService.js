@@ -1,21 +1,6 @@
 import { UNIFIED_DICTIONARY } from '../data/unifiedDictionary.js';
-import textToIPAPackage from 'text-to-ipa';
 
-// Inicializar la librería text-to-ipa
-let isTextToIPALoaded = false;
-let textToIPAAvailable = true;
-
-function ensureTextToIPALoaded() {
-  if (!isTextToIPALoaded && textToIPAAvailable) {
-    try {
-      textToIPAPackage.loadDict();
-      isTextToIPALoaded = true;
-    } catch (error) {
-      console.warn('text-to-ipa library failed to load:', error.message);
-      textToIPAAvailable = false;
-    }
-  }
-}
+// text-to-ipa no funciona en navegadores, solo usamos diccionario unificado
 
 /**
  * Obtiene la transcripción de una palabra desde el diccionario unificado
@@ -138,30 +123,12 @@ function shouldUseWeakFormBasic(word) {
  * @returns {string} Transcripción IPA o palabra original si falla
  */
 function lookupWithTextToIPA(word, accent = 'rp') {
-  ensureTextToIPALoaded();
+  // NOTE: text-to-ipa library doesn't work in browsers due to Node.js dependencies
+  // For now, return the word as-is when not found in unified dictionary
+  // This could be enhanced with a browser-compatible IPA dictionary in the future
   
-  if (!textToIPAAvailable || !isTextToIPALoaded) {
-    return word;
-  }
-  
-  try {
-    const result = textToIPAPackage.lookup(word.toLowerCase());
-    
-    if (result && result.text) {
-      let ipaText = result.text;
-      if (ipaText.includes(' OR ')) {
-        ipaText = ipaText.split(' OR ')[0];
-      }
-      
-      // Aplicar correcciones básicas según el acento
-      return applyAccentCorrections(ipaText, accent);
-    }
-    
-    return word;
-  } catch (error) {
-    console.warn(`text-to-ipa lookup failed for "${word}": ${error.message}`);
-    return word;
-  }
+  console.warn(`Word "${word}" not found in unified dictionary. Consider adding it for better accuracy.`);
+  return word;
 }
 
 /**
@@ -365,7 +332,7 @@ export class UnifiedTranscriptionService {
         if (dictTranscription) {
           transcribedWords.push(dictTranscription);
         } else {
-          // Fallback a text-to-ipa
+          // Fallback (text-to-ipa no funciona en navegadores)
           const lookupResult = lookupWithTextToIPA(word, accent);
           transcribedWords.push(lookupResult);
         }

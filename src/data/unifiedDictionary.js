@@ -353,7 +353,15 @@ export const UNIFIED_DICTIONARY = {
     american: "wɜrnt"
   },
 
-  // PALABRAS COMUNES CON DIFERENCIAS RP/AMERICAN
+  // PALABRAS BÁSICAS COMUNES (corrigiendo transcripciones incorrectas de text-to-ipa)
+  "my": {
+    rp: "maɪ",
+    american: "maɪ"
+  },
+  "name": {
+    rp: "neɪm",
+    american: "neɪm"
+  },
   "hello": {
     rp: "həˈləʊ",
     american: "həˈloʊ"
@@ -397,6 +405,40 @@ export const UNIFIED_DICTIONARY = {
   "ask": {
     rp: "ɑːsk",
     american: "æsk"
+  },
+
+  // PALABRAS COMUNES ADICIONALES
+  "book": {
+    rp: "bʊk",
+    american: "bʊk"
+  },
+  "books": {
+    rp: "bʊks",
+    american: "bʊks"
+  },
+  "cat": {
+    rp: "kæt",
+    american: "kæt"
+  },
+  "cats": {
+    rp: "kæts",
+    american: "kæts"
+  },
+  "dog": {
+    rp: "dɒɡ",
+    american: "dɔɡ"
+  },
+  "dogs": {
+    rp: "dɒɡz",
+    american: "dɔɡz"
+  },
+  "house": {
+    rp: "haʊs",
+    american: "haʊs"
+  },
+  "houses": {
+    rp: "haʊzɪz",
+    american: "haʊzz"
   },
   "answer": {
     rp: "ˈɑːnsə",

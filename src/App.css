@@ -12,3 +12,65 @@
 * {
   box-sizing: border-box;
 }
+
+/* Tab Navigation Styles */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 30px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 4px;
+  max-width: 400px;
+  margin: 0 auto 30px auto;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: #888;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  color: #b0b0b0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-button.active {
+  background: #4a9eff;
+  color: white;
+}
+
+.tab-button.active:hover {
+  background: #3a8eef;
+}
+
+/* Tab Content */
+.tab-content {
+  width: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+  
+  .tab-navigation {
+    margin-bottom: 20px;
+    max-width: 100%;
+  }
+  
+  .tab-button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
