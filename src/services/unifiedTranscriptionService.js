@@ -83,9 +83,9 @@ function shouldUseWeakForm(word, wordIndex, allWords, originalText) {
     return false;
   }
   
-  // Regla 4: Primera palabra de oración tiende a ser fuerte (excepto "the", "a", "an")
+  // Regla 4: Primera palabra de oración tiende a ser fuerte (excepto "the", "a", "an", "there")
   if (wordIndex === 0) {
-    const weakAtStart = ['the', 'a', 'an'];
+    const weakAtStart = ['the', 'a', 'an', 'there'];
     if (!weakAtStart.includes(lowerWord)) {
       return false; // Fuerte al inicio
     }

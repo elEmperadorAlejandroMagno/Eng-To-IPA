@@ -469,7 +469,10 @@ export const UNIFIED_DICTIONARY = {
     american: "hɪr"
   },
   "there": {
-    rp: "ðeə",
+    rp: {
+      strong: "ðeə",
+      weak: "ðə"
+    },
     american: "ðer"
   },
   "where": {
