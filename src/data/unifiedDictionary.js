@@ -492,6 +492,38 @@ export const UNIFIED_DICTIONARY = {
     rp: "nɪə",
     american: "nɪr"
   },
+  "clear": {
+    rp: "klɪə",
+    american: "klɪr"
+  },
+  "fear": {
+    rp: "fɪə",
+    american: "fɪr"
+  },
+  "hear": {
+    rp: "hɪə",
+    american: "hɪr"
+  },
+  "dear": {
+    rp: "dɪə",
+    american: "dɪr"
+  },
+  "beer": {
+    rp: "bɪə",
+    american: "bɪr"
+  },
+  "bear": {
+    rp: "beə",
+    american: "ber"
+  },
+  "wear": {
+    rp: "weə",
+    american: "wer"
+  },
+  "tear": {
+    rp: "tɪə", // como en "tear drop"
+    american: "tɪr"
+  },
 
   // PALABRAS BÁSICAS
   "cat": {

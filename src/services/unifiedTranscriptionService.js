@@ -57,29 +57,78 @@ function getTranscriptionFromUnifiedDict(word, accent = 'rp', useWeakForm = true
 }
 
 /**
- * Determina si una palabra debería usar su forma débil (lógica simplificada)
+ * Determina si una palabra debería usar su forma débil basado en reglas contextuales
  * @param {string} word - La palabra a evaluar
+ * @param {number} wordIndex - Posición en el array de palabras
+ * @param {Array<string>} allWords - Todas las palabras de la oración
+ * @param {string} originalText - Texto original para contexto
  * @returns {boolean} True si debería usar forma débil
  */
-function shouldUseWeakFormBasic(word) {
-  // Palabras que típicamente permanecen fuertes
-  const typicallyStrong = ['i', 'my', 'may', 'might', 'ought', 'by', 'so', 'while'];
-  if (typicallyStrong.includes(word)) {
+function shouldUseWeakForm(word, wordIndex, allWords, originalText) {
+  const lowerWord = word.toLowerCase().replace(/[^\w']/g, '');
+  
+  // Regla 1: Palabras que SIEMPRE son fuertes
+  const alwaysStrong = ['i', 'my', 'may', 'might', 'ought', 'by', 'so', 'while'];
+  if (alwaysStrong.includes(lowerWord)) {
     return false;
   }
-
-  // Contracciones ya están en forma débil
-  if (word.includes("'")) {
+  
+  // Regla 2: Contracciones ya están en forma débil
+  if (lowerWord.includes("'")) {
     return false;
   }
-
-  // "the" se maneja especialmente
-  if (word === 'the') {
+  
+  // Regla 3: "the" se maneja especialmente (variación alofónica)
+  if (lowerWord === 'the') {
     return false;
   }
-
-  // Por defecto, usar forma débil para un inglés más natural
+  
+  // Regla 4: Primera palabra de oración tiende a ser fuerte (excepto "the", "a", "an")
+  if (wordIndex === 0) {
+    const weakAtStart = ['the', 'a', 'an'];
+    if (!weakAtStart.includes(lowerWord)) {
+      return false; // Fuerte al inicio
+    }
+  }
+  
+  // Regla 5: Última palabra antes de pausa fuerte (coma, punto, etc.)
+  if (wordIndex < allWords.length - 1) {
+    const nextWord = allWords[wordIndex + 1];
+    if (/^[.,!?;:]/.test(nextWord)) {
+      return false; // Fuerte antes de pausa
+    }
+  }
+  
+  // Regla 6: Última palabra de oración tiende a ser fuerte
+  if (wordIndex === allWords.length - 1 || 
+      (wordIndex === allWords.length - 2 && /^[.,!?;:]/.test(allWords[allWords.length - 1]))) {
+    return false; // Fuerte al final
+  }
+  
+  // Regla 7: Auxiliares en preguntas (al inicio) son fuertes
+  const auxiliaries = ['is', 'are', 'was', 'were', 'have', 'has', 'had', 'do', 'does', 'did', 
+                      'will', 'would', 'can', 'could', 'should', 'must'];
+  if (auxiliaries.includes(lowerWord) && wordIndex === 0) {
+    return false; // Auxiliar fuerte en pregunta
+  }
+  
+  // Regla 8: Palabras con énfasis (mayúsculas en texto original)
+  const originalWord = originalText.split(/\s+/)[wordIndex];
+  if (originalWord && /^[A-Z]/.test(originalWord) && lowerWord !== 'i' && wordIndex > 0) {
+    return false; // Posible énfasis
+  }
+  
+  // Regla 9: Por defecto usar forma débil en posiciones no prominentes
   return true;
+}
+
+/**
+ * Función básica para compatibilidad
+ * @param {string} word - Palabra
+ * @returns {boolean} 
+ */
+function shouldUseWeakFormBasic(word) {
+  return shouldUseWeakForm(word, 1, [word], word); // Posición media por defecto
 }
 
 /**
@@ -151,8 +200,81 @@ function applyAccentCorrections(text, accent) {
 function applyTheVariation(transcription) {
   // "the" + vocal = /ði/
   // "the" + consonante = /ðə/
-  const thePattern = /\bðə\s+([æɑɒɔʊuiɪeəʌɜaɪaʊɔɪəeəʊɛ])/g;
+  const thePattern = /\bðə\s+([æɑɒɔʊu iɪeəʌɜaɪaʊɔɪɪəeəʊəɛ])/g;
   return transcription.replace(thePattern, 'ði $1');
+}
+
+/**
+ * Detecta si una transcripción termina en vocal
+ * @param {string} transcription - Transcripción IPA
+ * @returns {boolean} True si termina en vocal
+ */
+function endsWithVowel(transcription) {
+  if (!transcription) return false;
+  
+  // Vocales IPA comunes (simplificado y corregido)
+  const vowelPattern = /[æɑɒɔʊuɪieoəʌɜɪaʊɔɪɛœ]ː?$/;
+  return vowelPattern.test(transcription.trim());
+}
+
+/**
+ * Detecta si una transcripción empieza con vocal
+ * @param {string} transcription - Transcripción IPA
+ * @returns {boolean} True si empieza con vocal
+ */
+function startsWithVowel(transcription) {
+  if (!transcription) return false;
+  
+  const vowelPattern = /^[æɑɒɔʊʉuiɪeəʌɜoɘaɪaʊɔɪɜɟɨɪəeəʊəɛʎœɶɨɘɵɯɤɦɐʉɦɜɽɨɘɵɯɤ]/;
+  return vowelPattern.test(transcription.trim());
+}
+
+/**
+ * Aplica Linking R para RP basado en el spelling original de las palabras
+ * @param {Array<string>} transcribedWords - Array de transcripciones
+ * @param {Array<string>} originalWords - Array de palabras originales
+ * @param {string} accent - Acento ('rp' o 'american')
+ * @returns {Array<string>} Array con linking R aplicado
+ */
+function applyLinkingR(transcribedWords, originalWords, accent) {
+  if (accent !== 'rp' || transcribedWords.length < 2 || originalWords.length !== transcribedWords.length) {
+    return transcribedWords;
+  }
+  
+  const result = [...transcribedWords];
+  
+  for (let i = 0; i < result.length - 1; i++) {
+    const currentTranscription = result[i];
+    const nextTranscription = result[i + 1];
+    const currentOriginal = originalWords[i];
+    const nextOriginal = originalWords[i + 1];
+    
+    // Saltar puntuación
+    if (/^[.,!?;:'-]+$/.test(nextOriginal)) {
+      continue;
+    }
+    
+    // Aplicar linking R si:
+    // 1. La palabra original termina en 'r' o tiene 'r' en la última sílaba
+    // 2. La transcripción actual termina en vocal
+    // 3. La siguiente transcripción empieza con vocal
+    const originalEndsInR = /r\w*$/i.test(currentOriginal) || /\w*r$/i.test(currentOriginal);
+    
+    if (originalEndsInR && 
+        endsWithVowel(currentTranscription) && 
+        startsWithVowel(nextTranscription)) {
+      
+      // Excepciones donde NO aplicar linking R
+      const exceptions = ['more', 'sure', 'pure']; // Palabras que ya tienen R en RP
+      const cleanOriginal = currentOriginal.toLowerCase().replace(/[^\w]/g, '');
+      
+      if (!exceptions.includes(cleanOriginal) && !currentTranscription.endsWith('r')) {
+        result[i] = currentTranscription + 'r';
+      }
+    }
+  }
+  
+  return result;
 }
 
 /**
@@ -224,13 +346,22 @@ export class UnifiedTranscriptionService {
     const words = line.match(/\b\w+'\w+\b|\b\w+\b|[.,!?;:'-]/g) || [];
     const transcribedWords = [];
 
-    for (const word of words) {
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      
       if (/^[.,!?;:'-]+$/.test(word)) {
         // Solo puntuación, mantener
         transcribedWords.push(word);
       } else {
-        // Es palabra, buscar en diccionario unificado primero
-        const dictTranscription = getTranscriptionFromUnifiedDict(word, accent, useWeakForms);
+        // Es palabra, determinar si usar forma débil con contexto completo
+        let useWeakFormForThisWord = useWeakForms;
+        
+        if (useWeakForms) {
+          useWeakFormForThisWord = shouldUseWeakForm(word, i, words, line);
+        }
+        
+        // Buscar en diccionario unificado primero
+        const dictTranscription = getTranscriptionFromUnifiedDict(word, accent, useWeakFormForThisWord);
         if (dictTranscription) {
           transcribedWords.push(dictTranscription);
         } else {
@@ -241,8 +372,11 @@ export class UnifiedTranscriptionService {
       }
     }
 
+    // Aplicar Linking R (solo para RP) - pasar tanto transcripciones como palabras originales
+    let finalWords = applyLinkingR(transcribedWords, words, accent);
+
     // Unir y limpiar
-    let result = transcribedWords.join(' ');
+    let result = finalWords.join(' ');
     result = result.replace(/\s+([.,!?;:'-])/g, '$1');
     result = result.replace(/\s{2,}/g, ' ').trim();
 
