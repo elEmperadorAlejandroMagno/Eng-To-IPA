@@ -3,7 +3,8 @@ import TranscriptionForm from './components/TranscriptionForm';
 import ResultDisplay from './components/ResultDisplay';
 import PracticeForm from './components/PracticeForm';
 import PracticeResult from './components/PracticeResult';
-import { phoneticTranscriptionService } from './services/phoneticTranscriptionService';
+import { apiTranscriptionService } from './services/apiTranscriptionService';
+import StatusBar from './components/StatusBar';
 import './App.css';
 
 function App() {
@@ -15,71 +16,49 @@ function App() {
   
   // Estados para la práctica
   const [practiceResult, setPracticeResult] = useState(null);
+  const [isPracticeLoading, setIsPracticeLoading] = useState(false);
 
-  const handleTranscribe = async (text, ipaType, useWeakForms) => {
+  const handleTranscribe = async (text, ipaType, applySimplification) => {
     setIsLoading(true);
     setError('');
     setResult('');
 
     try {
-      // Convert IPA type to accent code
       const accent = ipaType === 'RP IPA' ? 'rp' : 'american';
-      
-      // Perform actual IPA transcription
-      const transcriptionResult = phoneticTranscriptionService.transcribeToIpa(
-        text, 
-        accent, 
-        useWeakForms
-      );
-      
-      // Add slashes for American IPA as per original logic
-      const finalResult = accent === 'american' ? `/${transcriptionResult}/` : transcriptionResult;
-      
-      setResult(finalResult);
-      setLastTranscription({ 
-        text, 
-        ipaType, 
-        useWeakForms, 
-        result: finalResult 
+      const { ipa } = await apiTranscriptionService.transcribe({
+        text,
+        accent,
+        useWeakForms: true,
+        applySimplification: !!applySimplification,
+        ignoreStress: false,
       });
+      const finalResult = accent === 'american' ? `/${ipa}/` : ipa;
+      setResult(finalResult);
+      setLastTranscription({ text, ipaType, useWeakForms: true, applySimplification, result: finalResult });
       setIsLoading(false);
-      
     } catch (err) {
       setError(`Error transcribing text: ${err.message}`);
       setIsLoading(false);
     }
   };
 
-  const handlePractice = (text, ipaType, userAnswer) => {
+  const handlePractice = async (text, ipaType, userAnswer) => {
+    setIsPracticeLoading(true);
     try {
-      // Convert IPA type to accent code
       const accent = ipaType === 'RP IPA' ? 'rp' : 'american';
-      
-      // Get correct transcription
-      const correctTranscription = phoneticTranscriptionService.transcribeToIpa(
-        text, 
-        accent, 
-        true // Always use weak forms for practice
-      );
-      
-      // Add slashes for American IPA
-      const finalCorrect = accent === 'american' ? `/${correctTranscription}/` : correctTranscription;
-      
-      // Compare answers (ignoring stress symbols)
-      const isCorrect = compareTranscriptions(userAnswer, finalCorrect);
-      
-      setPracticeResult({
+      const { ipa: correct } = await apiTranscriptionService.transcribe({
         text,
-        ipaType,
-        userAnswer,
-        correctAnswer: finalCorrect,
-        isCorrect
+        accent,
+        useWeakForms: true,
+        ignoreStress: false,
       });
-      
+      const finalCorrect = accent === 'american' ? `/${correct}/` : correct;
+      const isCorrect = compareTranscriptions(userAnswer, finalCorrect);
+      setPracticeResult({ text, ipaType, userAnswer, correctAnswer: finalCorrect, isCorrect });
     } catch (err) {
-      setPracticeResult({
-        error: `Error checking answer: ${err.message}`
-      });
+      setPracticeResult({ error: `Error checking answer: ${err.message}` });
+    } finally {
+      setIsPracticeLoading(false);
     }
   };
 
@@ -118,6 +97,13 @@ function App() {
         </button>
       </div>
 
+      {/* Global status */}
+      <StatusBar 
+        loading={isLoading || isPracticeLoading}
+        message={isLoading ? 'Transcribiendo en el servidor...' : (isPracticeLoading ? 'Verificando respuesta...' : '')}
+        error={error || practiceResult?.error || ''}
+      />
+
       {/* Tab Content */}
       <div className="tab-content">
         {activeTab === 'transcribe' && (
@@ -137,7 +123,7 @@ function App() {
         
         {activeTab === 'practice' && (
           <>
-            <PracticeForm onPractice={handlePractice} />
+            <PracticeForm onPractice={handlePractice} isLoading={isPracticeLoading} />
             <PracticeResult result={practiceResult} />
           </>
         )}

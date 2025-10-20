@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Database files
+*.sqlite
+*.db
+server/scripts/data/
+server/ipa_en.sqlite

@@ -4,19 +4,19 @@ import './TranscriptionForm.css';
 const TranscriptionForm = ({ onTranscribe, isLoading }) => {
   const [inputText, setInputText] = useState('');
   const [ipaType, setIpaType] = useState('RP IPA');
-  const [useWeakForms, setUseWeakForms] = useState(true);
+  const [applySimplification, setApplySimplification] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputText.trim()) {
-      onTranscribe(inputText, ipaType, useWeakForms);
+      onTranscribe(inputText, ipaType, applySimplification);
     }
   };
 
   const handleClear = () => {
     setInputText('');
     setIpaType('RP IPA');
-    setUseWeakForms(true);
+    setApplySimplification(false);
   };
 
   return (
@@ -38,16 +38,16 @@ const TranscriptionForm = ({ onTranscribe, isLoading }) => {
           </select>
         </div>
 
-        {/* Weak Forms Checkbox */}
+        {/* Patterns of Simplification (placeholder) */}
         <div className="form-group">
           <label className="checkbox-label">
             <input
               type="checkbox"
-              checked={useWeakForms}
-              onChange={(e) => setUseWeakForms(e.target.checked)}
+              checked={applySimplification}
+              onChange={(e) => setApplySimplification(e.target.checked)}
               className="checkbox"
             />
-            Use weak forms (unstressed)
+            Apply Patterns of Simplification (beta)
           </label>
         </div>
 

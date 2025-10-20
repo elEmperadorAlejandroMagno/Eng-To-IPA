@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './PracticeForm.css';
 
-const PracticeForm = ({ onPractice }) => {
+const PracticeForm = ({ onPractice, isLoading = false }) => {
   const [inputText, setInputText] = useState('');
   const [ipaType, setIpaType] = useState('RP IPA');
   const [userAnswer, setUserAnswer] = useState('');
@@ -27,7 +27,7 @@ const PracticeForm = ({ onPractice }) => {
         Los símbolos de estrés (ˈ ˌ) y las barras (/) serán ignorados en la comparación.
       </p>
       
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleSubmit} className="form" aria-busy={isLoading}>
         {/* IPA Type Selection */}
         <div className="form-group">
           <label htmlFor="ipa-type">Selecciona el tipo de IPA:</label>
@@ -52,6 +52,7 @@ const PracticeForm = ({ onPractice }) => {
             placeholder="Introduce el texto en inglés que quieres transcribir..."
             rows={4}
             className="textarea"
+            disabled={isLoading}
           />
         </div>
 
@@ -65,6 +66,7 @@ const PracticeForm = ({ onPractice }) => {
             onChange={(e) => setUserAnswer(e.target.value)}
             placeholder="Escribe tu transcripción IPA aquí..."
             className="input"
+            disabled={isLoading}
           />
         </div>
 
@@ -72,10 +74,10 @@ const PracticeForm = ({ onPractice }) => {
         <div className="button-group">
           <button 
             type="submit" 
-            disabled={!inputText.trim() || !userAnswer.trim()}
+            disabled={!inputText.trim() || !userAnswer.trim() || isLoading}
             className="btn btn-primary"
           >
-            Verificar Respuesta
+            {isLoading ? 'Verificando...' : 'Verificar Respuesta'}
           </button>
           <button 
             type="button" 
