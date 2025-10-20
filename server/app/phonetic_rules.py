@@ -100,6 +100,97 @@ class ThatRule(PhoneticRule):
         return False  # Use strong form for demonstrative pronoun
 
 
+class HaveRule(PhoneticRule):
+    """Rule for 'have' - strong when main verb (possession/eating/obligation), weak when auxiliary"""
+    
+    def __init__(self):
+        # Words that indicate 'have' is likely auxiliary (perfect tenses)
+        self.past_participle_indicators = [
+            'been', 'done', 'gone', 'seen', 'said', 'made', 'come', 'taken', 'given',
+            'found', 'thought', 'worked', 'called', 'asked', 'looked', 'used', 'tried',
+            'left', 'felt', 'kept', 'heard', 'brought', 'written', 'shown', 'moved',
+            'played', 'turned', 'started', 'opened', 'closed', 'happened', 'become',
+            'known', 'put', 'told', 'helped', 'changed', 'wanted', 'learned', 'lived'
+        ]
+        
+        # Infinitive markers that indicate obligation (have to)
+        self.infinitive_markers = ['to']
+        
+        # Direct objects that indicate possession/eating (main verb)
+        self.possession_objects = [
+            'a', 'an', 'the', 'my', 'your', 'his', 'her', 'our', 'their', 'some',
+            'money', 'time', 'car', 'house', 'food', 'water', 'coffee', 'tea',
+            'breakfast', 'lunch', 'dinner', 'problem', 'question', 'idea', 'plan'
+        ]
+    
+    def applies_to(self, word: str, context: Dict) -> bool:
+        clean_word = re.sub(r"[^\w']", '', word.lower())
+        return clean_word == 'have'
+    
+    def apply(self, word: str, context: Dict) -> bool:
+        word_index = context.get('word_index', 0)
+        words = context.get('words', [])
+        
+        # Check if followed by 'to' (obligation: "have to do")
+        if word_index < len(words) - 1:
+            next_word = re.sub(r"[^\w']", '', words[word_index + 1].lower())
+            if next_word == 'to':
+                return False  # Strong form for obligation
+        
+        # Check if followed by direct object (possession/eating)
+        if word_index < len(words) - 1:
+            next_word = re.sub(r"[^\w']", '', words[word_index + 1].lower())
+            if next_word in self.possession_objects:
+                return False  # Strong form for possession/eating
+        
+        # Check if followed by past participle (auxiliary for perfect tenses)
+        if word_index < len(words) - 1:
+            next_word = re.sub(r"[^\w']", '', words[word_index + 1].lower())
+            if next_word in self.past_participle_indicators:
+                return True  # Weak form for auxiliary
+        
+        # Additional heuristics:
+        # If 'have' is at the beginning of a question, likely auxiliary
+        if word_index == 0 and len(words) > 2:
+            # "Have you done...?" - auxiliary
+            second_word = re.sub(r"[^\w']", '', words[1].lower())
+            if second_word in ['you', 'we', 'they', 'i']:
+                return True  # Weak form for auxiliary question
+        
+        # Default: assume main verb (possession/obligation) - strong form
+        return False
+    
+    def get_weak_form(self, word: str, context: Dict) -> str:
+        """Get appropriate weak form considering H-dropping rules"""
+        word_index = context.get('word_index', 0)
+        words = context.get('words', [])
+        punct_re = context.get('punct_re')
+        
+        # Base weak form without H
+        base_weak = 'əv'
+        # Weak form with H (after pause or at start)
+        h_weak = 'həv'
+        
+        # Rule 1: Keep H at the beginning of sentence
+        if word_index == 0:
+            return h_weak
+        
+        # Rule 2: Keep H after pause (punctuation)
+        if word_index > 0 and punct_re:
+            prev_token = words[word_index - 1]
+            if punct_re.match(prev_token):
+                return h_weak
+        
+        # Rule 3: Keep H after comma, period, etc. (even if not immediately before)
+        # Check if there's punctuation in the previous few tokens
+        for i in range(max(0, word_index - 2), word_index):
+            if punct_re and punct_re.match(words[i]):
+                return h_weak
+        
+        # Default: use H-dropped form (əv)
+        return base_weak
+
+
 class PositionalRule(PhoneticRule):
     """Rule for positional strong forms"""
     
@@ -146,6 +237,7 @@ class WeakFormProcessor:
             TheVariationRule(),
             ThereRule(),
             ThatRule(),
+            HaveRule(),
             PositionalRule(),
         ]
         self.punct_re = re.compile(r"^[.,!?;:'-]+$")

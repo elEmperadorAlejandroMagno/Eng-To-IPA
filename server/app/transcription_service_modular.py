@@ -71,6 +71,20 @@ class ModularIPATranscriptionService:
             if 'strong' in parsed and 'weak' in parsed:
                 # Determine which form to use
                 if use_weak and self.weak_form_processor.should_use_weak(word, word_index, all_words):
+                    # Special handling for 'have' H-dropping
+                    clean_word = word.lower().replace("'", "")
+                    if clean_word == 'have':
+                        # Get context for H-dropping rules
+                        context = {
+                            'word_index': word_index,
+                            'words': all_words,
+                            'punct_re': self.weak_form_processor.punct_re
+                        }
+                        # Check if we have a HaveRule instance
+                        for rule in self.weak_form_processor.rules:
+                            if hasattr(rule, 'get_weak_form') and rule.applies_to(word, context):
+                                return rule.get_weak_form(word, context)
+                    
                     return parsed['weak']
                 else:
                     return parsed['strong']
