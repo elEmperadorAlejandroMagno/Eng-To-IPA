@@ -11,18 +11,19 @@ import sys
 import os
 sys.path.append(os.path.dirname(__file__))
 from transcription_service_modular import create_transcription_service
+from config import config
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="IPA Transcription API",
-    description="API for English IPA transcriptions with advanced phonetic rules",
-    version="1.0.0"
+    title=config.API_TITLE,
+    description=config.API_DESCRIPTION,
+    version=config.API_VERSION
 )
 
-# CORS for local dev (adjust origins in prod)
+# CORS configuration from environment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "*"],
+    allow_origins=config.CORS_ORIGINS if not config.is_development() else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -128,4 +129,4 @@ def post_transcribe(req: TranscribeRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host=config.SERVER_HOST, port=config.SERVER_PORT)

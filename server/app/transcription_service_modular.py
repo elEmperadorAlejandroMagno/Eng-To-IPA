@@ -217,14 +217,19 @@ def create_transcription_service(db_path: str = None) -> ModularIPATranscription
     Factory function to create modular transcription service
     
     Args:
-        db_path: Path to SQLite database (optional)
+        db_path: Path to SQLite database (optional, will use config if not provided)
         
     Returns:
         Configured ModularIPATranscriptionService instance
     """
     if db_path is None:
-        # Default path relative to this file
-        current_dir = os.path.dirname(__file__)
-        db_path = os.path.join(current_dir, 'ipa_en.sqlite')
+        # Try to import config for database path
+        try:
+            from config import config
+            db_path = config.DATABASE_PATH
+        except ImportError:
+            # Fallback to default path relative to this file
+            current_dir = os.path.dirname(__file__)
+            db_path = os.path.join(current_dir, 'ipa_en.sqlite')
     
     return ModularIPATranscriptionService(db_path)
