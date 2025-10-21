@@ -24,10 +24,10 @@ dist-ssr
 *.sw?
 
 # Database files
-*.sqlite
-*.db
+# *.sqlite
+# *.db
 server/scripts/data/
-server/ipa_en.sqlite
+# server/ipa_en.sqlite
 
 # Python virtual environments
 .venv/
