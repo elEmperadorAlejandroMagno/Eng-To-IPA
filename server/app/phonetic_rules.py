@@ -191,6 +191,85 @@ class HaveRule(PhoneticRule):
         return base_weak
 
 
+class MustRule(PhoneticRule):
+    """Rule for 'must' - complex contextual and phonetic rules"""
+    
+    def __init__(self):
+        # Vowel sounds that trigger weak form with /t/
+        self.vowel_sounds = ['æ', 'ɑ', 'ɒ', 'ɔ', 'ʊ', 'u', 'ɪ', 'i', 'e', 'ə', 'ʌ', 'ɜ', 'a', 'ɛ', 'o']
+        
+        # Consonant sounds that trigger t-dropping in weak form
+        self.consonant_sounds = [
+            'b', 'p', 'd', 't', 'g', 'k', 'f', 'v', 'θ', 'ð', 's', 'z', 'ʃ', 'ʒ', 
+            'h', 'm', 'n', 'ŋ', 'l', 'r', 'w', 'ʧ', 'ʤ'
+        ]
+        
+        # Words that indicate obligation (strong form)
+        self.obligation_indicators = [
+            'always', 'never', 'really', 'definitely', 'absolutely', 'certainly'
+        ]
+        
+        # Weak forms of 'have' that trigger strong 'must'
+        self.weak_have_forms = ['əv', 'həv']
+    
+    def applies_to(self, word: str, context: Dict) -> bool:
+        clean_word = re.sub(r"[^\w']", '', word.lower())
+        return clean_word == 'must'
+    
+    def apply(self, word: str, context: Dict) -> bool:
+        word_index = context.get('word_index', 0)
+        words = context.get('words', [])
+        
+        # Check if followed by weak form of 'have' -> Strong form
+        if word_index < len(words) - 1:
+            next_word = words[word_index + 1].lower()
+            # This would need access to transcribed form, simplified check
+            if 'have' in next_word and len(words) > word_index + 2:
+                # If "must have done" pattern -> likely strong for obligation
+                potential_participle = words[word_index + 2].lower()
+                common_participles = ['done', 'been', 'gone', 'seen', 'said']
+                if potential_participle in common_participles:
+                    return False  # Strong form
+        
+        # Check for obligation context (preceded by strong indicators)
+        if word_index > 0:
+            prev_word = words[word_index - 1].lower()
+            if prev_word in self.obligation_indicators:
+                return False  # Strong form for emphasis
+        
+        # Default: use weak form (will be modified in get_weak_form)
+        return True
+    
+    def get_weak_form(self, word: str, context: Dict) -> str:
+        """Get appropriate weak form considering phonetic environment"""
+        word_index = context.get('word_index', 0)
+        words = context.get('words', [])
+        
+        # Base weak forms
+        weak_with_t = 'məst'  # Before vowels and /j/
+        weak_without_t = 'məs'  # Before consonants
+        
+        # Check what follows 'must'
+        if word_index < len(words) - 1:
+            next_word = words[word_index + 1]
+            
+            # Get first sound of next word (simplified)
+            next_clean = re.sub(r"[^\w']", '', next_word.lower())
+            if next_clean:
+                first_char = next_clean[0]
+                
+                # If starts with vowel or 'y' (approximating /j/) -> keep /t/
+                if first_char in 'aeiouy':
+                    return weak_with_t
+                
+                # If starts with consonant -> drop /t/
+                else:
+                    return weak_without_t
+        
+        # Default: keep /t/
+        return weak_with_t
+
+
 class PositionalRule(PhoneticRule):
     """Rule for positional strong forms"""
     
@@ -238,6 +317,7 @@ class WeakFormProcessor:
             ThereRule(),
             ThatRule(),
             HaveRule(),
+            MustRule(),
             PositionalRule(),
         ]
         self.punct_re = re.compile(r"^[.,!?;:'-]+$")

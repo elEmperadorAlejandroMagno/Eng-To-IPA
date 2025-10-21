@@ -45,6 +45,9 @@ class CharacterCorrector(Transformer):
         corrected = re.sub(r'^/([^/]+)/$', r'\1', corrected)
         corrected = corrected.replace('/', '')
         
+        # Remove syllable boundary markers
+        corrected = corrected.replace('.', '')
+        
         # Apply basic replacements
         for old_char, new_char in self.basic_replacements.items():
             corrected = corrected.replace(old_char, new_char)
@@ -144,7 +147,6 @@ class RPSymbolTransformer(Transformer):
         self.transformations = {
             '!': '(!)',
             '?': '(?)',
-            '.': ' //',
             ',': ' /',
         }
     
@@ -154,8 +156,18 @@ class RPSymbolTransformer(Transformer):
             return text
             
         transformed = text
+        
+        # Apply basic symbol transformations
         for symbol, replacement in self.transformations.items():
             transformed = transformed.replace(symbol, replacement)
+        
+        # Handle sentence-ending periods separately (not syllable boundaries)
+        # Only replace periods that are at word boundaries, not within IPA transcriptions
+        import re
+        # Replace periods that appear as separate tokens (sentence endings)
+        transformed = re.sub(r'\s*\.\s*', ' // ', transformed)  # " . " -> " // "
+        transformed = re.sub(r'\.$', ' //', transformed)        # "." at end -> " //"
+        transformed = transformed.strip()  # Clean up any trailing spaces
         
         return transformed
 
