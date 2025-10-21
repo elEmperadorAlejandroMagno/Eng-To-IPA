@@ -140,3 +140,74 @@
   background: #c82333;
   transform: translateY(-1px);
 }
+
+/* IPA Input Styles */
+.ipa-help-text {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  font-weight: normal;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.ipa-help-text kbd {
+  background: #333;
+  color: #4a9eff;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 11px;
+  border: 1px solid #555;
+  margin: 0 1px;
+}
+
+.ipa-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ipa-input {
+  font-family: 'Arial Unicode MS', Arial, sans-serif;
+  font-size: 16px;
+  flex: 1;
+  transition: box-shadow 0.2s ease;
+}
+
+.ipa-input:focus {
+  box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+}
+
+.ipa-keyboard-toggle {
+  background: #4a9eff;
+  border: none;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ipa-keyboard-toggle:hover {
+  background: #3a8eef;
+  transform: translateY(-1px);
+}
+
+.ipa-keyboard-toggle:active {
+  transform: translateY(0);
+  background: #2a7edf;
+}
+
+.ipa-keyboard-toggle:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+

@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import TranscriptionForm from './components/TranscriptionForm';
 import ResultDisplay from './components/ResultDisplay';
 import PracticeForm from './components/PracticeForm';
 import PracticeResult from './components/PracticeResult';
+import IPASidebar from './components/IPASidebar';
 import { apiTranscriptionService } from './services/apiTranscriptionService';
 import StatusBar from './components/StatusBar';
-import './App.css';
+import './css/App.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState('transcribe');
@@ -17,6 +18,9 @@ function App() {
   // Estados para la práctica
   const [practiceResult, setPracticeResult] = useState(null);
   const [isPracticeLoading, setIsPracticeLoading] = useState(false);
+  
+  // Referencias para insertar caracteres IPA
+  const practiceInputRef = useRef(null);
 
   const handleTranscribe = async (text, ipaType, applySimplification) => {
     setIsLoading(true);
@@ -82,24 +86,56 @@ function App() {
     
     return normalizedUser === normalizedCorrect;
   };
+  
+  // Handle character insertion from sidebar
+  const handleIPACharacterInsert = (character) => {
+    if (activeTab === 'practice' && practiceInputRef.current) {
+      const input = practiceInputRef.current;
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const currentValue = input.value;
+      
+      // Insert character at cursor position
+      const newValue = currentValue.slice(0, start) + character + currentValue.slice(end);
+      
+      // Update the input value through the practice form
+      const event = { target: { value: newValue } };
+      input.value = newValue;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      
+      // Set cursor position after inserted character
+      setTimeout(() => {
+        const newCursorPos = start + character.length;
+        input.setSelectionRange(newCursorPos, newCursorPos);
+        input.focus();
+      }, 0);
+    }
+  };
 
   return (
     <div className="app">
-      {/* Tab Navigation */}
-      <div className="tab-navigation">
-        <button 
-          className={`tab-button ${activeTab === 'transcribe' ? 'active' : ''}`}
-          onClick={() => setActiveTab('transcribe')}
-        >
-          Transcriptor IPA
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'practice' ? 'active' : ''}`}
-          onClick={() => setActiveTab('practice')}
-        >
-          Práctica
-        </button>
-      </div>
+      {/* IPA Sidebar */}
+      <IPASidebar 
+        onCharacterSelect={handleIPACharacterInsert}
+      />
+      
+      {/* Main Content */}
+      <div className="main-content">
+        {/* Tab Navigation */}
+        <div className="tab-navigation">
+          <button 
+            className={`tab-button ${activeTab === 'transcribe' ? 'active' : ''}`}
+            onClick={() => setActiveTab('transcribe')}
+          >
+            Transcriptor IPA
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'practice' ? 'active' : ''}`}
+            onClick={() => setActiveTab('practice')}
+          >
+            Práctica
+          </button>
+        </div>
 
       {/* Global status */}
       <StatusBar 
@@ -127,10 +163,15 @@ function App() {
         
         {activeTab === 'practice' && (
           <>
-            <PracticeForm onPractice={handlePractice} isLoading={isPracticeLoading} />
+            <PracticeForm 
+              onPractice={handlePractice} 
+              isLoading={isPracticeLoading}
+              inputRef={practiceInputRef}
+            />
             <PracticeResult result={practiceResult} />
           </>
         )}
+        </div>
       </div>
     </div>
   );

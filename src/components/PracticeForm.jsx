@@ -1,10 +1,19 @@
-import { useState } from 'react';
-import './PracticeForm.css';
+import { useState, useRef } from 'react';
+import IPAKeyboard from './IPAKeyboard';
+import { useIPAInput } from '../hooks/useIPAInput';
+import '../css/PracticeForm.css';
 
-const PracticeForm = ({ onPractice, isLoading = false }) => {
+const PracticeForm = ({ onPractice, isLoading = false, inputRef }) => {
   const [inputText, setInputText] = useState('');
   const [ipaType, setIpaType] = useState('RP IPA');
   const [userAnswer, setUserAnswer] = useState('');
+  const [showIPAKeyboard, setShowIPAKeyboard] = useState(false);
+  
+  // Ref for the IPA input field - use external ref if provided
+  const ipaInputRef = inputRef || useRef(null);
+  
+  // Use IPA input hook for keyboard shortcuts
+  const { insertCharacter } = useIPAInput(ipaInputRef, setUserAnswer, userAnswer);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,6 +26,15 @@ const PracticeForm = ({ onPractice, isLoading = false }) => {
     setInputText('');
     setIpaType('RP IPA');
     setUserAnswer('');
+    setShowIPAKeyboard(false);
+  };
+  
+  const toggleIPAKeyboard = () => {
+    setShowIPAKeyboard(!showIPAKeyboard);
+  };
+  
+  const handleIPACharacterSelect = (character) => {
+    insertCharacter(character);
   };
 
   return (
@@ -24,6 +42,7 @@ const PracticeForm = ({ onPractice, isLoading = false }) => {
       <h1 className="title">Práctica de Transcripción IPA</h1>
       <p className="description">
         Introduce un texto en inglés, selecciona el tipo de IPA y escribe tu transcripción. 
+        Usa la referencia del panel izquierdo, atajos de teclado o el teclado virtual. 
         Los símbolos de estrés (ˈ ˌ) y las barras (/) serán ignorados en la comparación.
       </p>
       
@@ -58,16 +77,33 @@ const PracticeForm = ({ onPractice, isLoading = false }) => {
 
         {/* User Answer Input */}
         <div className="form-group">
-          <label htmlFor="user-answer">Tu transcripción IPA:</label>
-          <input
-            type="text"
-            id="user-answer"
-            value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
-            placeholder="Escribe tu transcripción IPA aquí..."
-            className="input"
-            disabled={isLoading}
-          />
+          <label htmlFor="user-answer">
+            Tu transcripción IPA:
+            <span className="ipa-help-text">
+              💡 Panel izquierdo (clic), <kbd>Alt</kbd>+letra (æ), <kbd>Alt+Shift</kbd>+letra (ɑː), doble pulsación ɛ↔ɜ, teclado virtual
+            </span>
+          </label>
+          <div className="ipa-input-container">
+            <input
+              type="text"
+              id="user-answer"
+              ref={ipaInputRef}
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Escribe tu transcripción IPA aquí... (usa atajos de teclado o el teclado virtual)"
+              className="input ipa-input"
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={toggleIPAKeyboard}
+              className="ipa-keyboard-toggle"
+              title="Abrir/cerrar teclado virtual IPA"
+              disabled={isLoading}
+            >
+              🔤
+            </button>
+          </div>
         </div>
 
         {/* Buttons */}
@@ -88,6 +124,13 @@ const PracticeForm = ({ onPractice, isLoading = false }) => {
           </button>
         </div>
       </form>
+      
+      {/* IPA Virtual Keyboard */}
+      <IPAKeyboard 
+        isVisible={showIPAKeyboard}
+        onCharacterSelect={handleIPACharacterSelect}
+        onClose={() => setShowIPAKeyboard(false)}
+      />
     </div>
   );
 };

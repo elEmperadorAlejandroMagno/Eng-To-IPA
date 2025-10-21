@@ -1,4 +1,4 @@
-import './StatusBar.css';
+import '../css/StatusBar.css';
 
 const StatusBar = ({ loading = false, message = '', error = '' }) => {
   if (!loading && !error && !message) return null;

@@ -1,0 +1,298 @@
+/* IPA Virtual Keyboard Styles */
+
+.ipa-keyboard-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ipa-keyboard {
+  background: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.ipa-keyboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px 15px;
+  border-bottom: 1px solid #333;
+}
+
+.ipa-keyboard-header h3 {
+  margin: 0;
+  color: #4a9eff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Tabs */
+.ipa-keyboard-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 15px 25px;
+  border-bottom: 1px solid #333;
+  background: #222;
+}
+
+.tab-button {
+  background: #333;
+  border: none;
+  color: #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 60px;
+  font-size: 11px;
+}
+
+.tab-button:hover {
+  background: #444;
+  color: white;
+}
+
+.tab-button.active {
+  background: #4a9eff;
+  color: white;
+}
+
+.tab-icon {
+  font-family: 'Arial Unicode MS', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.tab-label {
+  font-size: 10px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Character Grid */
+.ipa-character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+  padding: 20px 25px;
+  min-height: 200px;
+}
+
+.ipa-character-button {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white;
+  padding: 15px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 70px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ipa-character-button:hover {
+  background: #3a3a3a;
+  border-color: #4a9eff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.2);
+}
+
+.ipa-character-button:active {
+  transform: translateY(0);
+  background: #4a9eff;
+}
+
+.character {
+  font-family: 'Arial Unicode MS', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: normal;
+  color: #4a9eff;
+}
+
+.shortcut {
+  font-size: 10px;
+  color: #888;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.ipa-character-button:hover .shortcut {
+  color: #ccc;
+}
+
+/* Help Section */
+.ipa-keyboard-help {
+  padding: 15px 25px 20px;
+  background: #222;
+  border-top: 1px solid #333;
+  margin-top: auto;
+}
+
+.ipa-keyboard-help p {
+  margin: 0;
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+}
+
+.ipa-keyboard-help kbd {
+  background: #333;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  border: 1px solid #555;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .ipa-keyboard {
+    max-width: 95vw;
+  }
+  
+  .ipa-character-grid {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 6px;
+    padding: 15px 20px;
+  }
+  
+  .ipa-character-button {
+    padding: 12px 6px;
+    min-height: 60px;
+  }
+  
+  .character {
+    font-size: 20px;
+  }
+  
+  .tab-button {
+    min-width: 50px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ipa-keyboard-overlay {
+    padding: 10px;
+  }
+  
+  .ipa-keyboard-header {
+    padding: 15px 20px 10px;
+  }
+  
+  .ipa-keyboard-tabs {
+    padding: 10px 20px;
+    justify-content: center;
+  }
+  
+  .ipa-character-grid {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 4px;
+    padding: 15px;
+  }
+  
+  .ipa-character-button {
+    padding: 10px 4px;
+    min-height: 50px;
+  }
+  
+  .character {
+    font-size: 18px;
+  }
+  
+  .shortcut {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+  
+  .tab-button {
+    min-width: 45px;
+    padding: 4px 6px;
+  }
+  
+  .tab-icon {
+    font-size: 14px;
+  }
+  
+  .tab-label {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ipa-keyboard-tabs {
+    gap: 1px;
+  }
+  
+  .tab-button {
+    min-width: 40px;
+    padding: 4px;
+  }
+  
+  .tab-label {
+    display: none;
+  }
+  
+  .ipa-character-grid {
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  }
+  
+  .shortcut {
+    display: none;
+  }
+}

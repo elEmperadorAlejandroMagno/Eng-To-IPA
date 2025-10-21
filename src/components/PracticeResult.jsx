@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './PracticeResult.css';
+import '../css/PracticeResult.css';
 
 const PracticeResult = ({ result }) => {
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);

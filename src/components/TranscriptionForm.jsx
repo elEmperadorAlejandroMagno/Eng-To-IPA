@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './TranscriptionForm.css';
+import '../css/TranscriptionForm.css';
 
 const TranscriptionForm = ({ onTranscribe, isLoading }) => {
   const [inputText, setInputText] = useState('');
