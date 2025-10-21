@@ -1,0 +1,20 @@
+.status-bar {
+  max-width: 800px;
+  margin: 10px auto 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1f1f1f;
+  color: #e0e0e0;
+  border-left: 4px solid #4a9eff;
+}
+.status-bar.loading { border-left-color: #4a9eff; }
+.status-bar.error { border-left-color: #dc3545; background: rgba(220,53,69,0.12); color: #ffd1d6; }
+.spinner { animation: pulse 1s infinite ease-in-out; }
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

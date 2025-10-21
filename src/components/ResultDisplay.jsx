@@ -1,4 +1,4 @@
-import './ResultDisplay.css';
+import '../css/ResultDisplay.css';
 
 const ResultDisplay = ({ result, error, originalText, ipaType }) => {
   const copyToClipboard = async () => {

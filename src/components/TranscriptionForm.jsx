@@ -1,22 +1,23 @@
 import { useState } from 'react';
-import './TranscriptionForm.css';
+import '../css/TranscriptionForm.css';
 
 const TranscriptionForm = ({ onTranscribe, isLoading }) => {
   const [inputText, setInputText] = useState('');
   const [ipaType, setIpaType] = useState('RP IPA');
-  const [useWeakForms, setUseWeakForms] = useState(true);
+  const [applySimplification, setApplySimplification] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputText.trim()) {
-      onTranscribe(inputText, ipaType, useWeakForms);
+      // Always send false for applySimplification (feature disabled)
+      onTranscribe(inputText, ipaType, false);
     }
   };
 
   const handleClear = () => {
     setInputText('');
     setIpaType('RP IPA');
-    setUseWeakForms(true);
+    // applySimplification always stays false (disabled feature)
   };
 
   return (
@@ -38,17 +39,25 @@ const TranscriptionForm = ({ onTranscribe, isLoading }) => {
           </select>
         </div>
 
-        {/* Weak Forms Checkbox */}
+        {/* Patterns of Simplification (disabled) */}
         <div className="form-group">
           <label className="checkbox-label">
             <input
               type="checkbox"
-              checked={useWeakForms}
-              onChange={(e) => setUseWeakForms(e.target.checked)}
-              className="checkbox"
+              checked={false}
+              disabled={true}
+              className="checkbox disabled"
+              title="Esta función aún no está implementada"
             />
-            Use weak forms (unstressed)
+            Apply Patterns of Simplification (próximamente)
           </label>
+          <div className="warning-message">
+            <span className="warning-icon">⚠️</span>
+            <span className="warning-text">
+              Esta función puede incrementar el tiempo de procesado del texto. 
+              <strong>Actualmente no disponible.</strong>
+            </span>
+          </div>
         </div>
 
         {/* Input Text */}

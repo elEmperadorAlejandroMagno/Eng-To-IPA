@@ -1,0 +1,228 @@
+/* IPA Reference Styles */
+
+.ipa-reference-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.ipa-reference {
+  background: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Header */
+.ipa-reference-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px 15px;
+  border-bottom: 1px solid #333;
+}
+
+.ipa-reference-header h3 {
+  margin: 0;
+  color: #4a9eff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Categories */
+.ipa-reference-categories {
+  padding: 15px 25px;
+  border-bottom: 1px solid #333;
+}
+
+.category-select {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: white;
+  padding: 8px 12px;
+  font-size: 14px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.category-select:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+/* Content */
+.ipa-reference-content {
+  padding: 20px 25px;
+  flex: 1;
+}
+
+.ipa-reference-content h4 {
+  margin: 0 0 20px 0;
+  color: #e0e0e0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.character-list {
+  display: grid;
+  gap: 12px;
+}
+
+.character-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #333;
+  transition: all 0.2s ease;
+}
+
+.character-item:hover {
+  background: #333;
+  border-color: #4a9eff;
+}
+
+.character-symbol {
+  font-family: 'Arial Unicode MS', Arial, sans-serif;
+  font-size: 24px;
+  color: #4a9eff;
+  font-weight: normal;
+  min-width: 40px;
+  text-align: center;
+}
+
+.character-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.character-name {
+  color: #e0e0e0;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.character-shortcut {
+  display: flex;
+  align-items: center;
+}
+
+.character-shortcut kbd {
+  background: #333;
+  color: #4a9eff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  border: 1px solid #555;
+  font-family: monospace;
+}
+
+/* Help section */
+.ipa-reference-help {
+  padding: 20px 25px;
+  background: #222;
+  border-top: 1px solid #333;
+  margin-top: auto;
+}
+
+.ipa-reference-help h4 {
+  margin: 0 0 12px 0;
+  color: #4a9eff;
+  font-size: 16px;
+}
+
+.ipa-reference-help ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #ccc;
+}
+
+.ipa-reference-help li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.ipa-reference-help kbd {
+  background: #333;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  border: 1px solid #555;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ipa-reference-overlay {
+    padding: 10px;
+  }
+  
+  .ipa-reference {
+    max-width: 95vw;
+  }
+  
+  .ipa-reference-header {
+    padding: 15px 20px 10px;
+  }
+  
+  .ipa-reference-categories {
+    padding: 10px 20px;
+  }
+  
+  .ipa-reference-content {
+    padding: 15px 20px;
+  }
+  
+  .character-item {
+    padding: 10px;
+    gap: 12px;
+  }
+  
+  .character-symbol {
+    font-size: 20px;
+    min-width: 35px;
+  }
+  
+  .character-name {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .character-item {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .character-symbol {
+    align-self: center;
+    margin-bottom: 5px;
+  }
+  
+  .character-info {
+    width: 100%;
+    align-items: flex-start;
+  }
+}
