@@ -9,14 +9,15 @@ const TranscriptionForm = ({ onTranscribe, isLoading }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputText.trim()) {
-      onTranscribe(inputText, ipaType, applySimplification);
+      // Always send false for applySimplification (feature disabled)
+      onTranscribe(inputText, ipaType, false);
     }
   };
 
   const handleClear = () => {
     setInputText('');
     setIpaType('RP IPA');
-    setApplySimplification(false);
+    // applySimplification always stays false (disabled feature)
   };
 
   return (
@@ -38,17 +39,25 @@ const TranscriptionForm = ({ onTranscribe, isLoading }) => {
           </select>
         </div>
 
-        {/* Patterns of Simplification (placeholder) */}
+        {/* Patterns of Simplification (disabled) */}
         <div className="form-group">
           <label className="checkbox-label">
             <input
               type="checkbox"
-              checked={applySimplification}
-              onChange={(e) => setApplySimplification(e.target.checked)}
-              className="checkbox"
+              checked={false}
+              disabled={true}
+              className="checkbox disabled"
+              title="Esta función aún no está implementada"
             />
-            Apply Patterns of Simplification (beta)
+            Apply Patterns of Simplification (próximamente)
           </label>
+          <div className="warning-message">
+            <span className="warning-icon">⚠️</span>
+            <span className="warning-text">
+              Esta función puede incrementar el tiempo de procesado del texto. 
+              <strong>Actualmente no disponible.</strong>
+            </span>
+          </div>
         </div>
 
         {/* Input Text */}

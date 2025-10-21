@@ -62,13 +62,17 @@ function App() {
     }
   };
 
-  // Function to compare transcriptions ignoring stress symbols and slashes
+  // Function to compare transcriptions ignoring stress symbols and RP punctuation
   const compareTranscriptions = (userAnswer, correctAnswer) => {
     const normalize = (str) => {
       return str
-        .replace(/[ˈˌ]/g, '')     // Remove primary and secondary stress
-        .replace(/[\/]/g, '')     // Remove forward slashes
-        .replace(/\s+/g, ' ')     // Normalize whitespace
+        .replace(/[ˈˌ]/g, '')           // Remove primary and secondary stress
+        .replace(/[\/]/g, '')           // Remove forward slashes  
+        .replace(/\(!\)/g, '')        // Remove (!)
+        .replace(/\(\?\)/g, '')        // Remove (?)
+        .replace(/\s*\/\/\s*/g, ' ')    // Remove // (sentence endings)
+        .replace(/\s*\/\s*/g, ' ')      // Remove / (commas)
+        .replace(/\s+/g, ' ')           // Normalize whitespace
         .trim()
         .toLowerCase();
     };
