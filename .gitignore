@@ -1,46 +1,66 @@
-# Logs
-logs
-*.log
+# Dependencies
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+package-lock.json
 
-node_modules
-dist
-dist-ssr
-*.local
+# Build outputs
+dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+
+# Cache directories
+.npm
+.eslintcache
+.parcel-cache
+.cache/
+.temp/
+.tmp/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+logs/
+*.log
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+!.vscode/settings.json
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*~
 
-# Database files
-# *.sqlite
-# *.db
-server/scripts/data/
-# server/ipa_en.sqlite
+# OS generated files
+Thumbs.db
+ehthumbs.db
 
-# Python virtual environments
-.venv/
-venv/
-env/
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -50,15 +70,65 @@ parts/
 sdist/
 var/
 wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+PYTHONPATH
 
-# Environment files (keep .env.example)
+# Virtual environments
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-server/.env
-server/.env.local
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Database files (commented out for deployment testing)
+# *.sqlite
+# *.sqlite3
+# *.db
+# server/ipa_en.sqlite
+
+# Keep databases visible for testing
+!*.sqlite
+!*.sqlite3
+!*.db
+
+# But ignore large data dumps
+server/scripts/data/
+*.dump
+*.sql.gz
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Security
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Local configuration
+.env.local
+config.local.*
