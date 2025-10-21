@@ -12,16 +12,15 @@ class Config:
     """Configuration class with environment variables and defaults"""
     
     # Server Configuration
-    SERVER_PORT: int = int(os.getenv('SERVER_PORT', '8002'))
-    SERVER_HOST: str = os.getenv('SERVER_HOST', '0.0.0.0')
+    PORT: int = int(os.getenv('PORT', '8002'))
+    HOST: str = os.getenv('HOST', '0.0.0.0')
     
     # Database Configuration
     DATABASE_PATH: str = os.getenv('DATABASE_PATH', './app/data/ipa_database.db')
     
     # CORS Configuration
     CORS_ORIGINS: List[str] = os.getenv(
-        'CORS_ORIGINS', 
-        'http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000'
+        'CORS_ORIGINS'
     ).split(',')
     
     # API Configuration
@@ -33,7 +32,7 @@ class Config:
     API_VERSION: str = os.getenv('API_VERSION', '1.0.0')
     
     # Environment
-    ENVIRONMENT: str = os.getenv('ENVIRONMENT', 'development')
+    ENVIRONMENT: str = os.getenv('ENVIRONMENT', 'production')
     
     @classmethod
     def is_development(cls) -> bool:

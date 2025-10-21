@@ -129,4 +129,4 @@ def post_transcribe(req: TranscribeRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=config.SERVER_HOST, port=config.SERVER_PORT)
+    uvicorn.run(app, host=config.HOST, port=config.PORT)
