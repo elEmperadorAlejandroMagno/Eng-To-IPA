@@ -1,0 +1,131 @@
+.word-search-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.word-search-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+.btn-search {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-search:hover:not(:disabled) {
+  background-color: #357abd;
+}
+
+.btn-search:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  padding: 12px;
+  background-color: #fee;
+  color: #c33;
+  border-left: 4px solid #e74c3c;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.word-result {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.word-result.not-found {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+}
+
+.word-result.found {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+.word-result h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 24px;
+}
+
+.pronunciation-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pronunciation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.accent-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 16px;
+}
+
+.ipa-text {
+  font-size: 20px;
+  font-family: 'Arial', 'Lucida Sans Unicode', sans-serif;
+  color: #2c3e50;
+  padding: 8px 12px;
+  background-color: #ecf0f1;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.weak-strong-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 20px;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #666;
+  min-width: 60px;
+}

@@ -130,6 +130,7 @@ const PracticeForm = ({ onPractice, isLoading = false, inputRef }) => {
         isVisible={showIPAKeyboard}
         onCharacterSelect={handleIPACharacterSelect}
         onClose={() => setShowIPAKeyboard(false)}
+        currentText={userAnswer}
       />
     </div>
   );

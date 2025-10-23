@@ -4,6 +4,8 @@ import ResultDisplay from './components/ResultDisplay';
 import PracticeForm from './components/PracticeForm';
 import PracticeResult from './components/PracticeResult';
 import IPASidebar from './components/IPASidebar';
+import IPAInput from './components/IPAInput';
+import WordSearch from './components/WordSearch';
 import { apiTranscriptionService } from './services/apiTranscriptionService';
 import StatusBar from './components/StatusBar';
 import './css/App.css';
@@ -14,6 +16,7 @@ function App() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [lastTranscription, setLastTranscription] = useState(null);
+  const [notFoundWords, setNotFoundWords] = useState([]);
   
   // Estados para la práctica
   const [practiceResult, setPracticeResult] = useState(null);
@@ -26,18 +29,20 @@ function App() {
     setIsLoading(true);
     setError('');
     setResult('');
+    setNotFoundWords([]);
 
     try {
       const accent = ipaType === 'RP IPA' ? 'rp' : 'american';
-      const { ipa } = await apiTranscriptionService.transcribe({
+      const response = await apiTranscriptionService.transcribe({
         text,
         accent,
         useWeakForms: true,
         applySimplification: !!applySimplification,
         ignoreStress: false,
       });
-      const finalResult = accent === 'american' ? `/${ipa}/` : ipa;
+      const finalResult = accent === 'american' ? `/${response.ipa}/` : response.ipa;
       setResult(finalResult);
+      setNotFoundWords(response.notFound || []);
       setLastTranscription({ text, ipaType, useWeakForms: true, applySimplification, result: finalResult });
       setIsLoading(false);
     } catch (err) {
@@ -135,6 +140,18 @@ function App() {
           >
             Práctica
           </button>
+          <button 
+            className={`tab-button ${activeTab === 'editor' ? 'active' : ''}`}
+            onClick={() => setActiveTab('editor')}
+          >
+            Editor IPA
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'search' ? 'active' : ''}`}
+            onClick={() => setActiveTab('search')}
+          >
+            Buscador
+          </button>
         </div>
 
       {/* Global status */}
@@ -157,6 +174,7 @@ function App() {
               error={error}
               originalText={lastTranscription?.text}
               ipaType={lastTranscription?.ipaType}
+              notFoundWords={notFoundWords}
             />
           </>
         )}
@@ -171,6 +189,10 @@ function App() {
             <PracticeResult result={practiceResult} />
           </>
         )}
+        
+        {activeTab === 'editor' && <IPAInput />}
+        
+        {activeTab === 'search' && <WordSearch />}
         </div>
       </div>
     </div>

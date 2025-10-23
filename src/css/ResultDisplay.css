@@ -77,3 +77,50 @@
   border-color: #dc3545;
   color: #ff6b6b;
 }
+
+.not-found-warning {
+  margin-top: 20px;
+  padding: 16px;
+  background: #2a2520;
+  border: 1px solid #ff9800;
+  border-left: 4px solid #ff9800;
+  border-radius: 6px;
+}
+
+.warning-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #ffa726;
+  font-size: 16px;
+}
+
+.warning-icon {
+  font-size: 20px;
+}
+
+.not-found-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.not-found-word {
+  padding: 6px 12px;
+  background: #3a3228;
+  border: 1px solid #ff9800;
+  border-radius: 4px;
+  color: #ffb74d;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.warning-message {
+  margin: 0;
+  font-size: 13px;
+  color: #b0b0b0;
+  line-height: 1.4;
+}

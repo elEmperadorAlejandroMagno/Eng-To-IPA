@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { IPA_CHARACTERS } from '../utils/ipaCharacters';
 import '../css/IPAKeyboard.css';
 
-const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose }) => {
+const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose, currentText = '' }) => {
   const [activeTab, setActiveTab] = useState('vowelsShort');
 
   if (!isVisible) return null;
@@ -38,6 +38,14 @@ const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose }) => {
           >
             ✕
           </button>
+        </div>
+        
+        {/* Display Area */}
+        <div className="ipa-keyboard-display">
+          <label className="display-label">Texto actual:</label>
+          <div className="display-text">
+            {currentText || <span className="placeholder">Comienza a escribir...</span>}
+          </div>
         </div>
 
         {/* Tabs */}
