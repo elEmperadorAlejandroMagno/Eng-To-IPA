@@ -57,9 +57,7 @@ function App() {
       const accent = ipaType === 'RP IPA' ? 'rp' : 'american';
       const { ipa: correct } = await apiTranscriptionService.transcribe({
         text,
-        accent,
-        useWeakForms: true,
-        ignoreStress: false,
+        accent
       });
       const finalCorrect = accent === 'american' ? `/${correct}/` : correct;
       const isCorrect = compareTranscriptions(userAnswer, finalCorrect);
