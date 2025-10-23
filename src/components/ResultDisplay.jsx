@@ -1,6 +1,6 @@
 import '../css/ResultDisplay.css';
 
-const ResultDisplay = ({ result, error, originalText, ipaType }) => {
+const ResultDisplay = ({ result, error, originalText, ipaType, notFoundWords = [] }) => {
   const copyToClipboard = async () => {
     if (result) {
       try {
@@ -64,6 +64,25 @@ const ResultDisplay = ({ result, error, originalText, ipaType }) => {
       <div className="result-content">
         {result}
       </div>
+      
+      {notFoundWords && notFoundWords.length > 0 && (
+        <div className="not-found-warning">
+          <div className="warning-header">
+            <span className="warning-icon">⚠️</span>
+            <strong>Palabras no encontradas:</strong>
+          </div>
+          <div className="not-found-list">
+            {notFoundWords.map((word, index) => (
+              <span key={index} className="not-found-word">
+                {word}
+              </span>
+            ))}
+          </div>
+          <p className="warning-message">
+            Estas palabras aparecen marcadas con asteriscos (*) en la transcripción porque no se encontraron en el diccionario.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
