@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { apiClient } from '../services/apiClient';
+import { useServiceWarmup } from '../hooks/useServiceWarmup';
 import '../css/WordSearch.css';
 
 function WordSearch() {
@@ -7,6 +8,7 @@ function WordSearch() {
   const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const { isWarming: serviceWarmingUp, withWarmupFeedback } = useServiceWarmup();
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -21,7 +23,9 @@ function WordSearch() {
     setResult(null);
 
     try {
-      const data = await apiClient.get('/ipa', { word: searchTerm.trim() });
+      const data = await withWarmupFeedback(async () => {
+        return apiClient.get('/ipa', { word: searchTerm.trim() });
+      });
       setResult(data);
     } catch (err) {
       setError(`Error al buscar la palabra: ${err.message}`);
@@ -96,6 +100,11 @@ function WordSearch() {
       </form>
 
       {error && <div className="error-message">{error}</div>}
+      {serviceWarmingUp && (
+        <div className="warmup-message">
+          ⏳ El servicio está iniciándose, esto puede tardar hasta un minuto...
+        </div>
+      )}
       
       {renderResult()}
     </div>

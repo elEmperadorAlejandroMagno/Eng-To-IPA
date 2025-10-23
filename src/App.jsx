@@ -8,6 +8,7 @@ import IPAInput from './components/IPAInput';
 import WordSearch from './components/WordSearch';
 import { apiTranscriptionService } from './services/apiTranscriptionService';
 import StatusBar from './components/StatusBar';
+import { useServiceWarmup } from './hooks/useServiceWarmup';
 import './css/App.css';
 
 function App() {
@@ -24,6 +25,9 @@ function App() {
   
   // Referencias para insertar caracteres IPA
   const practiceInputRef = useRef(null);
+  
+  // Hook para gestionar feedback de servicio en reposo
+  const { isWarming: serviceWarmingUp, withWarmupFeedback } = useServiceWarmup();
 
   const handleTranscribe = async (text, ipaType, applySimplification) => {
     setIsLoading(true);
@@ -33,12 +37,14 @@ function App() {
 
     try {
       const accent = ipaType === 'RP IPA' ? 'rp' : 'american';
-      const response = await apiTranscriptionService.transcribe({
-        text,
-        accent,
-        useWeakForms: true,
-        applySimplification: !!applySimplification,
-        ignoreStress: false,
+      const response = await withWarmupFeedback(async () => {
+        return apiTranscriptionService.transcribe({
+          text,
+          accent,
+          useWeakForms: true,
+          applySimplification: !!applySimplification,
+          ignoreStress: false,
+        });
       });
       const finalResult = accent === 'american' ? `/${response.ipa}/` : response.ipa;
       setResult(finalResult);
@@ -53,11 +59,14 @@ function App() {
 
   const handlePractice = async (text, ipaType, userAnswer) => {
     setIsPracticeLoading(true);
+    
     try {
       const accent = ipaType === 'RP IPA' ? 'rp' : 'american';
-      const { ipa: correct } = await apiTranscriptionService.transcribe({
-        text,
-        accent
+      const { ipa: correct } = await withWarmupFeedback(async () => {
+        return apiTranscriptionService.transcribe({
+          text,
+          accent
+        });
       });
       const finalCorrect = accent === 'american' ? `/${correct}/` : correct;
       const isCorrect = compareTranscriptions(userAnswer, finalCorrect);
@@ -155,7 +164,11 @@ function App() {
       {/* Global status */}
       <StatusBar 
         loading={isLoading || isPracticeLoading}
-        message={isLoading ? 'Transcribiendo en el servidor...' : (isPracticeLoading ? 'Verificando respuesta...' : '')}
+        message={
+          serviceWarmingUp 
+            ? '⏳ El servicio está iniciándose, esto puede tardar hasta un minuto...'
+            : (isLoading ? 'Transcribiendo en el servidor...' : (isPracticeLoading ? 'Verificando respuesta...' : ''))
+        }
         error={error || practiceResult?.error || ''}
       />
 
