@@ -48,6 +48,41 @@
   font-weight: 600;
 }
 
+/* Display Area */
+.ipa-keyboard-display {
+  padding: 15px 25px;
+  background: #222;
+  border-bottom: 1px solid #333;
+}
+
+.display-label {
+  display: block;
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.display-text {
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 6px;
+  padding: 12px 15px;
+  min-height: 50px;
+  font-size: 18px;
+  font-family: 'Arial Unicode MS', Arial, sans-serif;
+  color: #4a9eff;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.display-text .placeholder {
+  color: #555;
+  font-style: italic;
+}
+
 .close-button {
   background: none;
   border: none;
