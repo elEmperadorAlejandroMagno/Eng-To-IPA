@@ -34,13 +34,46 @@ function WordSearch() {
     }
   };
 
+  const renderPronunciation = (data) => {
+    if (!data) return <span className="ipa-text">N/A</span>;
+    
+    if (typeof data === 'object' && (data.strong || data.weak)) {
+      return (
+        <div className="weak-strong-forms">
+          {data.strong && (
+            <div className="form-item">
+              <span className="form-label">Strong:</span>
+              <span className="ipa-text">{data.strong}</span>
+            </div>
+          )}
+          {data.weak && (
+            <div className="form-item">
+              <span className="form-label">Weak:</span>
+              <span className="ipa-text">{data.weak}</span>
+            </div>
+          )}
+        </div>
+      );
+    }
+    
+    return <span className="ipa-text">{data}</span>;
+  };
+
   const renderResult = () => {
     if (!result) return null;
 
     if (!result.found) {
       return (
         <div className="word-result not-found">
-          <p>❌ Palabra "<strong>{result.word}</strong>" no encontrada en la base de datos</p>
+          <p>❌ Palabra "<strong>{result.word}</strong>" no encontrada</p>
+        </div>
+      );
+    }
+
+    if (!result.sources || result.sources.length === 0) {
+      return (
+        <div className="word-result not-found">
+          <p>❌ No se encontraron fuentes para la palabra "<strong>{result.word}</strong>"</p>
         </div>
       );
     }
@@ -49,30 +82,28 @@ function WordSearch() {
       <div className="word-result found">
         <h3>"{result.word}"</h3>
         
-        <div className="pronunciation-section">
-          <div className="pronunciation-item">
-            <span className="accent-label">🇺🇸 American:</span>
-            <span className="ipa-text">{result.american || 'N/A'}</span>
-          </div>
-          
-          <div className="pronunciation-item">
-            <span className="accent-label">🇬🇧 RP:</span>
-            {typeof result.rp === 'object' ? (
-              <div className="weak-strong-forms">
-                <div className="form-item">
-                  <span className="form-label">Strong:</span>
-                  <span className="ipa-text">{result.rp.strong}</span>
-                </div>
-                <div className="form-item">
-                  <span className="form-label">Weak:</span>
-                  <span className="ipa-text">{result.rp.weak}</span>
-                </div>
+        {result.sources.map((source, index) => (
+          <div key={index} className="source-section">
+            <h4 className="source-name">
+              {source.source === 'database' && '📚 Database'}
+              {source.source === 'wiktionary' && '📖 Wiktionary'}
+              {source.source === 'cambridge' && '🎓 Cambridge'}
+              {!['database', 'wiktionary', 'cambridge'].includes(source.source) && `📝 ${source.source}`}
+            </h4>
+            
+            <div className="pronunciation-section">
+              <div className="pronunciation-item">
+                <span className="accent-label">🇺🇸 American:</span>
+                {renderPronunciation(source.american)}
               </div>
-            ) : (
-              <span className="ipa-text">{result.rp || 'N/A'}</span>
-            )}
+              
+              <div className="pronunciation-item">
+                <span className="accent-label">🇬🇧 RP:</span>
+                {renderPronunciation(source.rp)}
+              </div>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     );
   };

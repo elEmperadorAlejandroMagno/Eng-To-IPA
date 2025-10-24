@@ -129,3 +129,8 @@
   color: #666;
   min-width: 60px;
 }
+
+.source-name {
+  font-style: italic;
+  color: #999;
+}

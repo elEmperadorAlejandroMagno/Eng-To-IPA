@@ -1,8 +1,8 @@
 import { apiClient } from './apiClient';
 
 export const apiTranscriptionService = {
-  async transcribe({ text, accent = 'american', useWeakForms = true, ignoreStress = false, applySimplification = false }) {
-    const payload = { text, accent, useWeakForms, ignoreStress, applySimplification };
+  async transcribe({ text, accent = 'american', useWeakForms = true, applySimplification = false }) {
+    const payload = { text, accent, useWeakForms, applySimplification };
     return apiClient.post('/transcribe', payload);
   },
   async ipa(word, accent = 'american') {
