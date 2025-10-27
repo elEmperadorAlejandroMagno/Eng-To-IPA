@@ -33,7 +33,11 @@ function IPAInput() {
   };
   
   const handleIPACharacterSelect = (character) => {
-    insertCharacter(character);
+    if (character === 'BACKSPACE') {
+      setText((prev) => prev.slice(0, -1));
+    } else {
+      insertCharacter(character);
+    }
   };
 
   return (
