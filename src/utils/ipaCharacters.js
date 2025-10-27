@@ -3,7 +3,21 @@
  * Comprehensive set of IPA characters for English transcription
  */
 
-// IPA Characters organized by category
+export const IPA_VIRTUAL_KEYBOARD_ROWS = [
+  ['ɑ','ɜ','i','ɔ','u','ð','θ','ɹ','ɛ'],
+  ['ə','w','e','r','t','ɪ','ʊ','ɒ','p'],
+  ['a','s','d','f','g','h','j','k','l'],
+  ['æ','z','ʒ','ʃ','ʌ','v','b','n','m'],
+  ['.?/']
+]
+
+export const IPA_VIRTUAL_KEYBOARD_SYMBOLS = [
+  ['/','[',']','(',')'],
+  ['ˈ','ˌ','ː','.','-'],
+  ['!','?','abc']
+]
+
+//IPA Characters organized by category
 export const IPA_CHARACTERS = {
   // Vowels - Monophthongs
   vowelsShort: [

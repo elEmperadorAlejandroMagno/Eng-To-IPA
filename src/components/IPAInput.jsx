@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import IPAKeyboard from './IPAKeyboard';
+import { useIPAInput } from '../hooks/useIPAInput';
 import '../css/IPAInput.css';
 
 function IPAInput() {
   const [text, setText] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showIPAKeyboard, setShowIPAKeyboard] = useState(false);
+  
+  // Ref for the textarea
+  const textareaRef = useRef(null);
+  
+  // Use IPA input hook for keyboard shortcuts
+  const { insertCharacter } = useIPAInput(textareaRef, setText, text);
 
   const handleCopy = async () => {
     try {
@@ -18,14 +27,34 @@ function IPAInput() {
   const handleClear = () => {
     setText('');
   };
+  
+  const toggleIPAKeyboard = () => {
+    setShowIPAKeyboard(!showIPAKeyboard);
+  };
+  
+  const handleIPACharacterSelect = (character) => {
+    insertCharacter(character);
+  };
 
   return (
     <div className="ipa-editor-container">
+      <div className="ipa-editor-header">
+        <h2 className="editor-title">Editor de texto IPA</h2>
+        <button
+          type="button"
+          onClick={toggleIPAKeyboard}
+          className="ipa-keyboard-toggle-editor"
+          title="Abrir/cerrar teclado virtual IPA"
+        >
+          🔤 Teclado Virtual
+        </button>
+      </div>
       <textarea
+        ref={textareaRef}
         className="ipa-editor-textarea"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Escribe o pega texto IPA aquí..."
+        placeholder="Escribe o pega texto IPA aquí... (usa atajos de teclado Alt+letra o el teclado virtual)"
       />
       <div className="ipa-editor-actions">
         <button 
@@ -52,6 +81,14 @@ function IPAInput() {
           </svg>
         </button>
       </div>
+      
+      {/* IPA Virtual Keyboard */}
+      <IPAKeyboard 
+        isVisible={showIPAKeyboard}
+        onCharacterSelect={handleIPACharacterSelect}
+        onClose={() => setShowIPAKeyboard(false)}
+        currentText={text}
+      />
     </div>
   );
 }

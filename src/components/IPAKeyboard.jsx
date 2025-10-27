@@ -1,28 +1,25 @@
 import { useState } from 'react';
-import { IPA_CHARACTERS } from '../utils/ipaCharacters';
+import { IPA_VIRTUAL_KEYBOARD_ROWS, IPA_VIRTUAL_KEYBOARD_SYMBOLS } from '../utils/ipaCharacters';
 import '../css/IPAKeyboard.css';
 
 const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose, currentText = '' }) => {
-  const [activeTab, setActiveTab] = useState('vowelsShort');
+  const [showSymbols, setShowSymbols] = useState(false);
 
   if (!isVisible) return null;
 
-  const tabs = [
-    { key: 'vowelsShort', label: 'Vocales Cortas', icon: 'ɪ' },
-    { key: 'vowelsLong', label: 'Vocales Largas', icon: 'iː' },
-    { key: 'diphthongs', label: 'Diptongos', icon: 'aɪ' },
-    { key: 'consonantsFricatives', label: 'Fricativas', icon: 'θ' },
-    { key: 'consonantsPlosives', label: 'Oclusivas', icon: 'p' },
-    { key: 'consonantsAffricates', label: 'Africadas', icon: 'tʃ' },
-    { key: 'consonantsNasals', label: 'Nasales', icon: 'ŋ' },
-    { key: 'consonantsLiquids', label: 'Líquidas', icon: 'ɹ' },
-    { key: 'consonantsGlides', label: 'Deslizantes', icon: 'j' },
-    { key: 'stress', label: 'Estrés', icon: 'ˈ' },
-    { key: 'punctuation', label: 'Puntuación', icon: '/' }
-  ];
-
   const handleCharacterClick = (character) => {
-    onCharacterSelect(character.char);
+    // Si es el botón especial '.?/', cambia a vista de símbolos
+    if (character === '.?/') {
+      setShowSymbols(true);
+    } 
+    // Si es el botón 'abc', vuelve al teclado principal
+    else if (character === 'abc') {
+      setShowSymbols(false);
+    } 
+    // Para cualquier otro carácter, insertarlo
+    else {
+      onCharacterSelect(character);
+    }
   };
 
   return (
@@ -48,36 +45,41 @@ const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose, currentText = '' }
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="ipa-keyboard-tabs">
-          {tabs.map(tab => (
-            <button
-              key={tab.key}
-              className={`tab-button ${activeTab === tab.key ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.key)}
-              title={tab.label}
-            >
-              <span className="tab-icon">{tab.icon}</span>
-              <span className="tab-label">{tab.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Character Grid */}
-        <div className="ipa-character-grid">
-          {IPA_CHARACTERS[activeTab]?.map((character, index) => (
-            <button
-              key={index}
-              className="ipa-character-button"
-              onClick={() => handleCharacterClick(character)}
-              title={`${character.char} - ${character.name}${character.shortcut ? ` (${character.shortcut})` : ''}`}
-            >
-              <span className="character">{character.char}</span>
-              {character.shortcut && (
-                <span className="shortcut">{character.shortcut}</span>
-              )}
-            </button>
-          ))}
+        {/* Keyboard Rows */}
+        <div className="ipa-keyboard-rows">
+          {!showSymbols ? (
+            // Main keyboard layout
+            IPA_VIRTUAL_KEYBOARD_ROWS.map((row, rowIndex) => (
+              <div key={rowIndex} className="keyboard-row">
+                {row.map((char, charIndex) => (
+                  <button
+                    key={charIndex}
+                    className={`keyboard-key ${char === '.?/' ? 'special-key' : ''}`}
+                    onClick={() => handleCharacterClick(char)}
+                    title={char === '.?/' ? 'Símbolos especiales' : char}
+                  >
+                    {char}
+                  </button>
+                ))}
+              </div>
+            ))
+          ) : (
+            // Special symbols view
+            IPA_VIRTUAL_KEYBOARD_SYMBOLS.map((row, rowIndex) => (
+              <div key={rowIndex} className="keyboard-row">
+                {row.map((char, charIndex) => (
+                  <button
+                    key={charIndex}
+                    className={`keyboard-key symbol-key ${char === 'abc' ? 'special-key' : ''}`}
+                    onClick={() => handleCharacterClick(char)}
+                    title={char === 'abc' ? 'Volver al teclado principal' : char}
+                  >
+                    {char}
+                  </button>
+                ))}
+              </div>
+            ))
+          )}
         </div>
 
         {/* Help Text */}

@@ -9,8 +9,9 @@ const PracticeForm = ({ onPractice, isLoading = false, inputRef }) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [showIPAKeyboard, setShowIPAKeyboard] = useState(false);
   
-  // Ref for the IPA input field - use external ref if provided
-  const ipaInputRef = inputRef || useRef(null);
+  // Ref for the IPA input field - create local ref and use external if provided
+  const localInputRef = useRef(null);
+  const ipaInputRef = inputRef || localInputRef;
   
   // Use IPA input hook for keyboard shortcuts
   const { insertCharacter } = useIPAInput(ipaInputRef, setUserAnswer, userAnswer);

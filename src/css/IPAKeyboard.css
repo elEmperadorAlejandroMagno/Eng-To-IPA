@@ -104,110 +104,87 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Tabs */
-.ipa-keyboard-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  padding: 15px 25px;
-  border-bottom: 1px solid #333;
-  background: #222;
-}
-
-.tab-button {
-  background: #333;
-  border: none;
-  color: #ccc;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-width: 60px;
-  font-size: 11px;
-}
-
-.tab-button:hover {
-  background: #444;
-  color: white;
-}
-
-.tab-button.active {
-  background: #4a9eff;
-  color: white;
-}
-
-.tab-icon {
-  font-family: 'Arial Unicode MS', Arial, sans-serif;
-  font-size: 16px;
-  font-weight: normal;
-}
-
-.tab-label {
-  font-size: 10px;
-  text-align: center;
-  line-height: 1.2;
-}
-
-/* Character Grid */
-.ipa-character-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 8px;
+/* Keyboard Rows Layout */
+.ipa-keyboard-rows {
   padding: 20px 25px;
-  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 250px;
 }
 
-.ipa-character-button {
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.keyboard-key {
   background: #2a2a2a;
-  border: 1px solid #444;
+  border: 2px solid #444;
   border-radius: 8px;
-  color: white;
-  padding: 15px 8px;
+  color: #4a9eff;
+  font-family: 'Arial Unicode MS', Arial, sans-serif;
+  font-size: 20px;
+  padding: 12px 16px;
+  min-width: 50px;
+  min-height: 50px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  min-height: 70px;
-  position: relative;
-  overflow: hidden;
+  justify-content: center;
+  font-weight: 500;
 }
 
-.ipa-character-button:hover {
+.keyboard-key:hover {
   background: #3a3a3a;
   border-color: #4a9eff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+  color: white;
 }
 
-.ipa-character-button:active {
+.keyboard-key:active {
   transform: translateY(0);
   background: #4a9eff;
+  color: white;
 }
 
-.character {
-  font-family: 'Arial Unicode MS', Arial, sans-serif;
-  font-size: 24px;
-  font-weight: normal;
-  color: #4a9eff;
+.keyboard-key.special-key {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  border-color: #ff6b6b;
+  color: white;
+  font-weight: 600;
+  min-width: 80px;
 }
 
-.shortcut {
-  font-size: 10px;
-  color: #888;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+.keyboard-key.special-key:hover {
+  background: linear-gradient(135deg, #ff8787 0%, #ff6b8a 100%);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Symbols View */
+.keyboard-key.symbol-key {
+  background: #2d2d4a;
+  border-color: #4a4a7f;
+  min-width: 60px;
+}
+
+.keyboard-key.symbol-key.special-key {
+  background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
+  border-color: #4a9eff;
+  color: white;
+  font-weight: 600;
+  min-width: 80px;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.ipa-character-button:hover .shortcut {
-  color: #ccc;
+.keyboard-key.symbol-key.special-key:hover {
+  background: linear-gradient(135deg, #5aa8ff 0%, #4086c7 100%);
+  transform: translateY(-2px) scale(1.05);
 }
 
 /* Help Section */
@@ -240,24 +217,15 @@
     max-width: 95vw;
   }
   
-  .ipa-character-grid {
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 6px;
+  .ipa-keyboard-rows {
     padding: 15px 20px;
   }
   
-  .ipa-character-button {
-    padding: 12px 6px;
-    min-height: 60px;
-  }
-  
-  .character {
-    font-size: 20px;
-  }
-  
-  .tab-button {
-    min-width: 50px;
-    padding: 6px 8px;
+  .keyboard-key {
+    font-size: 18px;
+    padding: 10px 14px;
+    min-width: 45px;
+    min-height: 45px;
   }
 }
 
@@ -270,64 +238,46 @@
     padding: 15px 20px 10px;
   }
   
-  .ipa-keyboard-tabs {
-    padding: 10px 20px;
-    justify-content: center;
-  }
-  
-  .ipa-character-grid {
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    gap: 4px;
+  .ipa-keyboard-rows {
     padding: 15px;
+    gap: 6px;
   }
   
-  .ipa-character-button {
-    padding: 10px 4px;
-    min-height: 50px;
+  .keyboard-row {
+    gap: 4px;
   }
   
-  .character {
-    font-size: 18px;
+  .keyboard-key {
+    font-size: 16px;
+    padding: 8px 12px;
+    min-width: 40px;
+    min-height: 40px;
   }
   
-  .shortcut {
-    font-size: 8px;
-    padding: 1px 4px;
-  }
-  
-  .tab-button {
-    min-width: 45px;
-    padding: 4px 6px;
-  }
-  
-  .tab-icon {
-    font-size: 14px;
-  }
-  
-  .tab-label {
-    font-size: 9px;
+  .keyboard-key.special-key {
+    min-width: 70px;
   }
 }
 
 @media (max-width: 480px) {
-  .ipa-keyboard-tabs {
-    gap: 1px;
+  .ipa-keyboard-rows {
+    padding: 10px;
+    gap: 4px;
   }
   
-  .tab-button {
-    min-width: 40px;
-    padding: 4px;
+  .keyboard-row {
+    gap: 3px;
   }
   
-  .tab-label {
-    display: none;
+  .keyboard-key {
+    font-size: 14px;
+    padding: 6px 10px;
+    min-width: 35px;
+    min-height: 35px;
   }
   
-  .ipa-character-grid {
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-  }
-  
-  .shortcut {
-    display: none;
+  .keyboard-key.special-key {
+    min-width: 60px;
+    font-size: 12px;
   }
 }
