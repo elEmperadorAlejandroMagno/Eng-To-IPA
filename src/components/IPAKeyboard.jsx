@@ -9,13 +9,19 @@ const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose, currentText = '' }
 
   const handleCharacterClick = (character) => {
     // Si es el botón especial '.?/', cambia a vista de símbolos
-    if (character === '.?/') {
+    if (character === ':.?/') {
       setShowSymbols(true);
     } 
     // Si es el botón 'abc', vuelve al teclado principal
-    else if (character === 'abc') {
+    else if (character === 'əðc') {
       setShowSymbols(false);
-    } 
+    }
+    else if (character === 'SPACE') {
+      onCharacterSelect(' ');
+    }
+    else if (character === '⌫') {
+      onCharacterSelect('BACKSPACE');
+    }
     // Para cualquier otro carácter, insertarlo
     else {
       onCharacterSelect(character);
@@ -54,7 +60,7 @@ const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose, currentText = '' }
                 {row.map((char, charIndex) => (
                   <button
                     key={charIndex}
-                    className={`keyboard-key ${char === '.?/' ? 'special-key' : ''}`}
+                    className={`keyboard-key ${(char === ':.?/' ? 'special-key' : '') || (char === 'SPACE' ? 'space-key' : '')}`}
                     onClick={() => handleCharacterClick(char)}
                     title={char === '.?/' ? 'Símbolos especiales' : char}
                   >
@@ -70,7 +76,7 @@ const IPAKeyboard = ({ onCharacterSelect, isVisible, onClose, currentText = '' }
                 {row.map((char, charIndex) => (
                   <button
                     key={charIndex}
-                    className={`keyboard-key symbol-key ${char === 'abc' ? 'special-key' : ''}`}
+                    className={`keyboard-key ${(char === 'abc' ? 'special-key' : '') || (char === 'SPACE' ? 'space-key' : '')}`}
                     onClick={() => handleCharacterClick(char)}
                     title={char === 'abc' ? 'Volver al teclado principal' : char}
                   >

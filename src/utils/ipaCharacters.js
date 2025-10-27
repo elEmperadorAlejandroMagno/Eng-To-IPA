@@ -8,13 +8,13 @@ export const IPA_VIRTUAL_KEYBOARD_ROWS = [
   ['ə','w','e','r','t','ɪ','ʊ','ɒ','p'],
   ['a','s','d','f','g','h','j','k','l'],
   ['æ','z','ʒ','ʃ','ʌ','v','b','n','m'],
-  ['.?/']
+  [':.?/','SPACE','⌫']
 ]
 
 export const IPA_VIRTUAL_KEYBOARD_SYMBOLS = [
-  ['/','[',']','(',')'],
-  ['ˈ','ˌ','ː','.','-'],
-  ['!','?','abc']
+  ['/','[',']','(',')','!'],
+  ['ˈ','ˌ','ː','.','-','?'],
+  ['əðc','SPACE','⌫']
 ]
 
 //IPA Characters organized by category

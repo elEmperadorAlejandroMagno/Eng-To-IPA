@@ -4,7 +4,7 @@ import '../css/TranscriptionForm.css';
 const TranscriptionForm = ({ onTranscribe, isLoading }) => {
   const [inputText, setInputText] = useState('');
   const [ipaType, setIpaType] = useState('RP IPA');
-  const [applySimplification, setApplySimplification] = useState(false);
+  // const [applySimplification, setApplySimplification] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -83,7 +83,6 @@ function App() {
     const normalize = (str) => {
       return str
         .replace(/[ˈˌ]/g, '')           // Remove primary and secondary stress
-        .replace(/[\/]/g, '')           // Remove forward slashes  
         .replace(/\(!\)/g, '')        // Remove (!)
         .replace(/\(\?\)/g, '')        // Remove (?)
         .replace(/\s*\/\/\s*/g, ' ')    // Remove // (sentence endings)
@@ -111,7 +110,6 @@ function App() {
       const newValue = currentValue.slice(0, start) + character + currentValue.slice(end);
       
       // Update the input value through the practice form
-      const event = { target: { value: newValue } };
       input.value = newValue;
       input.dispatchEvent(new Event('input', { bubbles: true }));
       

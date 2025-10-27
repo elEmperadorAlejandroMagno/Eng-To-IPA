@@ -35,7 +35,11 @@ const PracticeForm = ({ onPractice, isLoading = false, inputRef }) => {
   };
   
   const handleIPACharacterSelect = (character) => {
-    insertCharacter(character);
+    if (character === 'BACKSPACE') {
+      setUserAnswer((prev) => prev.slice(0, -1));
+    } else {
+      insertCharacter(character);
+    }
   };
 
   return (

@@ -152,6 +152,11 @@
   color: white;
 }
 
+.keyboard-key.space-key {
+  flex: 1;
+  min-width: 50%;
+}
+
 .keyboard-key.special-key {
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
   border-color: #ff6b6b;
