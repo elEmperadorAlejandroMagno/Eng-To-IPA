@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import IPAKeyboard from './IPAKeyboard';
 import { useIPAInput } from '../hooks/useIPAInput';
-import { useIsMobile } from '../hooks/useIsMobile';
 import '../css/PracticeForm.css';
 
 const PracticeForm = ({ onPractice, isLoading = false, inputRef }) => {
@@ -9,7 +8,6 @@ const PracticeForm = ({ onPractice, isLoading = false, inputRef }) => {
   const [ipaType, setIpaType] = useState('RP IPA');
   const [userAnswer, setUserAnswer] = useState('');
   const [showIPAKeyboard, setShowIPAKeyboard] = useState(false);
-  const isMobile = useIsMobile();
   
   // Ref for the IPA input field - create local ref and use external if provided
   const localInputRef = useRef(null);
@@ -100,8 +98,6 @@ const PracticeForm = ({ onPractice, isLoading = false, inputRef }) => {
               placeholder="Escribe tu transcripción IPA aquí... (usa atajos de teclado o el teclado virtual)"
               className="input ipa-input"
               disabled={isLoading}
-              readOnly={isMobile}
-              inputMode={isMobile ? 'none' : 'text'}
             />
             <button
               type="button"
