@@ -1,12 +1,14 @@
 import { useState, useRef } from 'react';
 import IPAKeyboard from './IPAKeyboard';
 import { useIPAInput } from '../hooks/useIPAInput';
+import { useIsMobile } from '../hooks/useIsMobile';
 import '../css/IPAInput.css';
 
 function IPAInput() {
   const [text, setText] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [showIPAKeyboard, setShowIPAKeyboard] = useState(false);
+  const isMobile = useIsMobile();
   
   // Ref for the textarea
   const textareaRef = useRef(null);
@@ -59,6 +61,8 @@ function IPAInput() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Escribe o pega texto IPA aquí... (usa atajos de teclado Alt+letra o el teclado virtual)"
+        readOnly={isMobile}
+        inputMode={isMobile ? 'none' : 'text'}
       />
       <div className="ipa-editor-actions">
         <button 
